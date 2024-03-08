@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import networkx as nx
+import pickle
 
 from .const import IntentsType, ReplacementsType, SentencesType
 from .ini_jsgf import get_intent_counts, split_rules
@@ -453,13 +454,15 @@ def json_to_graph(json_dict: typing.Dict[str, typing.Any]) -> nx.DiGraph:
 def graph_to_gzip_pickle(graph: nx.DiGraph, out_file: typing.BinaryIO, filename=None):
     """Convert to binary gzip pickle format."""
     with gzip.GzipFile(fileobj=out_file, filename=filename, mode="wb") as graph_gzip:
-        nx.readwrite.gpickle.write_gpickle(graph, graph_gzip)
+#        nx.readwrite.gpickle.write_gpickle(graph, graph_gzip)
+        pickle.dump(graph, graph_gzip, pickle.HIGHEST_PROTOCOL)
 
 
 def gzip_pickle_to_graph(in_file: typing.BinaryIO) -> nx.DiGraph:
     """Convert from binary gzip pickle format."""
     with gzip.GzipFile(fileobj=in_file, mode="rb") as graph_gzip:
-        return nx.readwrite.gpickle.read_gpickle(graph_gzip)
+#        return nx.readwrite.gpickle.read_gpickle(graph_gzip)
+        return pickle.load(graph_gzip)
 
 
 # -----------------------------------------------------------------------------
